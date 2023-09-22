@@ -1,0 +1,96 @@
+
+<p-table #dt [value]="listCountry" [rows]="25" [paginator]="true" [globalFilterFields]="['name.official']"
+    [(selection)]="selectedCountry" [rowHover]="true" dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            <h5 class="m-0"></h5>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 4rem">Flags</th>
+            <th style="width: 15rem" pSortableColumn="name.official">Country Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th >2 character Country Code</th>
+            <th >3 character Country Code</th>
+            <th >Native Country Name </th>
+            <th style="width: 5rem">Alternative Country Name </th>
+            <th >Country Calling Codes</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-country>
+        <tr>
+            <td>
+                <p-image [src]="country.flags.png" [preview]="true" alt="Image" width="70">
+                </p-image>
+            </td>
+            <td>
+                <a (click)="showDialog(country)">{{ country.name.official }}</a>
+            </td>
+            <td>{{country.cca2}}</td>
+            <td>{{country.cca3}}</td>
+            <!-- <td>{{country.name.nativeName}}</td> -->
+            <td><div *ngFor="let x of country.name.nativeName | keyvalue">{{x.value.official}}</div></td>
+            <td>{{country.altSpellings}}</td>
+            <td>{{country.idd.root}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="displayDialog" [style]="{width: '550px'}" header="Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-field row padding_10">
+            <div class="col-md-6 text_bold">
+                <label for="name">Flag</label>
+            </div>
+            <div class="col-md-6">
+                <p-image [src]="selectedCountry.flags.png" [preview]="true" alt="Image" width="70">
+                    <ng-template pTemplate="indicator">
+                        <i class="pi pi-check"></i>
+                    </ng-template>
+                </p-image>
+            </div>
+        </div>
+        <div class="p-field row padding_10">
+            <div class="col-md-6 text_bold">
+                <label for="name">Country Name</label>
+            </div>
+            <div class="col-md-6">
+                <label for="name">{{selectedCountry.name.official}}</label>
+            </div>
+        </div>
+        <div class="p-field row padding_10">
+            <div class="col-md-6 text_bold">
+                <label for="name">2 character Country Code</label>
+            </div>
+            <div class="col-md-6">
+                <label for="name">{{selectedCountry.cca2}}</label>
+            </div>
+        </div>
+        <div class="p-field row padding_10">
+            <div class="col-md-6 text_bold">
+                <label for="name">3 character Country Code</label>
+            </div>
+            <div class="col-md-6">
+                <label for="name">{{selectedCountry.cca3}}</label>
+            </div>
+        </div>
+        <div class="p-field row padding_10">
+            <div class="col-md-6 text_bold">
+                <label for="name">Country Calling Codes	</label>
+            </div>
+            <div class="col-md-6">
+                <label for="name">{{selectedCountry.idd.root}}</label>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text" (click)="closeDialog()"></button>
+    </ng-template>
+  </p-dialog>
